@@ -11,10 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalClose = document.querySelector("#modal-close");
   const fridgeList = document.querySelector("#fridge-items");
   const freezerList = document.querySelector("#freezer-items");
+  const pantryList = document.querySelector("#pantry-items");
   const pantryForms = document.querySelectorAll(".pantry-add-form");
 
   let shoppingItems = [];
-  let pantryItems = { fridge: [], freezer: [] };
+  let pantryItems = { fridge: [], freezer: [], pantry: [] };
 
   function syncLocalState() {
     const state = getSharedState();
@@ -126,6 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function renderPantry() {
     renderPantrySection("fridge", fridgeList);
     renderPantrySection("freezer", freezerList);
+    renderPantrySection("pantry", pantryList);
   }
 
   function formatHeroClock(date) {

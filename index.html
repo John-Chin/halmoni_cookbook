@@ -68,8 +68,10 @@
             alt="A sketch-style pantry fridge"
             class="fridge-illustration"
           />
-          <span class="fridge-label freezer-label">FREEZER</span>
-          <span class="fridge-label fridge-section-label">FRIDGE</span>
+          <span class="fridge-label freezer-label"> </span>
+          <!-- was FREEZER -->
+          <span class="fridge-label fridge-section-label"> </span>
+          <!-- was FRIDGE (can dynamically update these with counts)-->
           <span class="fridge-hint">Click to open →</span>
         </button>
       </main>
@@ -83,7 +85,7 @@
         aria-labelledby="fridge-modal-title"
       >
         <div class="modal-header">
-          <h2 id="fridge-modal-title" class="modal-title">Pantry Fridge</h2>
+          <h2 id="fridge-modal-title" class="modal-title">Inventory</h2>
           <button
             type="button"
             id="modal-close"
@@ -138,6 +140,29 @@
               id="freezer-items"
               class="pantry-list"
               aria-label="Freezer items"
+            ></ul>
+          </section>
+
+          <section class="pantry-section">
+            <h3 class="section-title">Pantry</h3>
+            <form data-section="pantry" class="add-item-form pantry-add-form">
+              <label class="sr-only" for="pantry-item-input"
+                >Add pantry item</label
+              >
+              <input
+                id="pantry-item-input"
+                name="pantry-item-input"
+                type="text"
+                class="sketch-input"
+                placeholder="Add pantry item"
+                autocomplete="off"
+              />
+              <button type="submit" class="sketch-button secondary">Add</button>
+            </form>
+            <ul
+              id="pantry-items"
+              class="pantry-list"
+              aria-label="Pantry items"
             ></ul>
           </section>
         </div>
