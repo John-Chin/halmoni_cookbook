@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Grandstander:wght@400;700&family=Walter+Turncoat&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/cookbook.css" />
+    <script defer src="js/global.js"></script>
+    <script defer src="js/cookbook.js"></script>
+  </head>
+  <body class="cookbook-page">
+    <div class="page-shell cookbook-shell">
+      <aside class="sidebar-panel toc-panel">
+        <h2 class="panel-title">Recipes</h2>
+        <button type="button" id="add-recipe-button" class="sketch-button add-recipe-button">
+          + Add Recipe
+        </button>
+        <nav id="recipe-toc" class="recipe-toc" aria-label="Recipe table of contents"></nav>
+      </aside>
+
+      <main class="cookbook-main">
+        <a class="sketch-button back-button" href="index.html">← Back to Pantry</a>
+
+        <article class="notebook-paper">
+          <div id="notebook-lines" class="notebook-lines" aria-hidden="true"></div>
+          <div class="paper-content">
+            <header class="recipe-header">
+              <h1 id="recipe-title" class="recipe-title"></h1>
+            </header>
+            <div id="recipe-body" class="recipe-body"></div>
+          </div>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>

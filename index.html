@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Pantry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Grandstander:wght@400;700&family=Walter+Turncoat&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <script defer src="js/global.js"></script>
+    <script defer src="js/home.js"></script>
+  </head>
+  <body class="home-page">
+    <div class="page-shell home-shell">
+      <aside class="sidebar-panel shopping-panel">
+        <section class="panel-section">
+          <div class="panel-header">
+            <h2 class="panel-title">Shopping List</h2>
+            <a class="sketch-button cookbook-link" href="cookbook.html">📖 Cookbook</a>
+          </div>
+          <form id="shopping-form" class="add-item-form">
+            <label class="sr-only" for="shopping-input">Add shopping list item</label>
+            <input
+              id="shopping-input"
+              name="shopping-input"
+              type="text"
+              class="sketch-input"
+              placeholder="Add milk, apples..."
+              autocomplete="off"
+            />
+            <button type="submit" class="sketch-button secondary">Add Item</button>
+          </form>
+          <ul id="shopping-list" class="shopping-list" aria-label="Shopping list items"></ul>
+        </section>
+      </aside>
+
+      <main class="main-stage">
+        <header class="hero-header">
+          <p class="hero-kicker">A cozy place for your ingredients and ideas</p>
+          <h1 class="hero-title">My Pantry</h1>
+        </header>
+
+        <button
+          type="button"
+          id="fridge-trigger"
+          class="fridge-card"
+          aria-haspopup="dialog"
+          aria-controls="fridge-modal"
+        >
+          <span class="fridge-click-sheen" aria-hidden="true"></span>
+          <img
+            src="assets/images/fridge-closed.png"
+            alt="A sketch-style pantry fridge"
+            class="fridge-illustration"
+          />
+          <span class="fridge-label freezer-label">FREEZER</span>
+          <span class="fridge-label fridge-section-label">FRIDGE</span>
+          <span class="fridge-hint">Click to open →</span>
+        </button>
+      </main>
+    </div>
+
+    <div id="fridge-modal" class="modal-overlay hidden" role="presentation">
+      <div
+        class="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="fridge-modal-title"
+      >
+        <div class="modal-header">
+          <h2 id="fridge-modal-title" class="modal-title">Pantry Fridge</h2>
+          <button type="button" id="modal-close" class="icon-button" aria-label="Close fridge editor">
+            ×
+          </button>
+        </div>
+
+        <div class="pantry-grid">
+          <section class="pantry-section">
+            <h3 class="section-title">Fridge</h3>
+            <form data-section="fridge" class="add-item-form pantry-add-form">
+              <label class="sr-only" for="fridge-item-input">Add fridge item</label>
+              <input
+                id="fridge-item-input"
+                name="fridge-item-input"
+                type="text"
+                class="sketch-input"
+                placeholder="Add fridge item"
+                autocomplete="off"
+              />
+              <button type="submit" class="sketch-button secondary">Add</button>
+            </form>
+            <ul id="fridge-items" class="pantry-list" aria-label="Fridge items"></ul>
+          </section>
+
+          <section class="pantry-section">
+            <h3 class="section-title">Freezer</h3>
+            <form data-section="freezer" class="add-item-form pantry-add-form">
+              <label class="sr-only" for="freezer-item-input">Add freezer item</label>
+              <input
+                id="freezer-item-input"
+                name="freezer-item-input"
+                type="text"
+                class="sketch-input"
+                placeholder="Add freezer item"
+                autocomplete="off"
+              />
+              <button type="submit" class="sketch-button secondary">Add</button>
+            </form>
+            <ul id="freezer-items" class="pantry-list" aria-label="Freezer items"></ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

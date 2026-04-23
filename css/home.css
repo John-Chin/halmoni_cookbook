@@ -1,0 +1,318 @@
+body.home-page {
+  background:
+    radial-gradient(circle at top left, rgba(255, 248, 240, 0.38), transparent 34%),
+    linear-gradient(135deg, #f98f45 0%, #fdb87e 48%, #f0a860 100%);
+}
+
+.home-shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.shopping-panel {
+  padding: 20px 18px;
+  position: sticky;
+  top: 20px;
+}
+
+.panel-section {
+  display: grid;
+  gap: 16px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.panel-header .panel-title {
+  margin-bottom: 0;
+}
+
+.shopping-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+
+.cookbook-link {
+  flex: 0 0 auto;
+  min-height: 46px;
+  padding: 10px 14px;
+  background: var(--orange-dark);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  border-radius: 8px;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.14);
+}
+
+.cookbook-link:hover,
+.cookbook-link:focus-visible {
+  background: var(--orange-deep);
+}
+
+.main-stage {
+  min-height: calc(100vh - 72px);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 18px 0;
+}
+
+.hero-header {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.hero-kicker {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 1.05rem;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: clamp(2.8rem, 7vw, 4rem);
+  color: #ffffff;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18);
+  letter-spacing: 0.04em;
+}
+
+.fridge-card {
+  position: relative;
+  width: min(100%, 262px);
+  min-height: 458px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  display: grid;
+  place-items: center;
+  transition:
+    transform var(--transition-fast),
+    filter var(--transition-fast);
+}
+
+.fridge-card:hover,
+.fridge-card:focus-visible {
+  transform: translate(-2px, -3px) rotate(-0.4deg);
+  filter: brightness(1.02);
+}
+
+.fridge-illustration {
+  position: relative;
+  z-index: 1;
+  width: 262px;
+  height: 458px;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+.fridge-click-sheen {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 246px;
+  height: 442px;
+  border: 0;
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(226, 231, 236, 0.97) 0%,
+      rgba(214, 220, 226, 0.95) 16%,
+      rgba(199, 206, 213, 0.92) 46%,
+      rgba(219, 225, 230, 0.95) 78%,
+      rgba(210, 216, 222, 0.97) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(233, 237, 241, 0.4) 0%,
+      rgba(223, 228, 233, 0.18) 14%,
+      rgba(176, 184, 192, 0.14) 28%,
+      rgba(229, 233, 237, 0.26) 48%,
+      rgba(165, 173, 181, 0.14) 68%,
+      rgba(226, 230, 234, 0.24) 84%,
+      rgba(194, 201, 207, 0.12) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(214, 220, 226, 0.12) 0 1px,
+      rgba(196, 203, 210, 0.1) 1px 2px,
+      rgba(222, 227, 232, 0.09) 2px 3px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 29%,
+      rgba(0, 0, 0, 0.035) 29% 30%,
+      transparent 30% 34%,
+      rgba(0, 0, 0, 0.035) 34% 35%,
+      transparent 35% 59%,
+      rgba(0, 0, 0, 0.035) 59% 60%,
+      transparent 60% 100%
+    ),
+    linear-gradient(112deg, rgba(255, 255, 255, 0.24), transparent 30%);
+  z-index: 0;
+}
+
+.fridge-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Walter Turncoat", cursive;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--orange-dark);
+  letter-spacing: 0.12em;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.freezer-label {
+  top: 20%;
+}
+
+.fridge-section-label {
+  top: 58%;
+}
+
+.fridge-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Walter Turncoat", cursive;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  z-index: 40;
+  overflow-y: auto;
+}
+
+.modal-card {
+  width: min(860px, 100%);
+  max-height: min(88vh, 900px);
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.98);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.modal-title {
+  margin: 0;
+  color: var(--orange-dark);
+  font-size: clamp(1.6rem, 3vw, 2rem);
+}
+
+.pantry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+  padding-right: 6px;
+}
+
+.pantry-section {
+  background: var(--cream);
+  border: var(--border-soft);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: var(--shadow-soft);
+}
+
+.section-title {
+  margin: 0 0 14px;
+  color: var(--orange-dark);
+  font-size: 1.2rem;
+}
+
+.pantry-add-form {
+  margin-bottom: 14px;
+}
+
+.pantry-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 980px) {
+  .home-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .shopping-panel {
+    position: static;
+    max-width: 520px;
+  }
+
+  .main-stage {
+    min-height: auto;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .modal-card {
+    max-height: 92vh;
+    padding: 20px;
+  }
+
+  .pantry-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .fridge-card {
+    width: min(100%, 228px);
+    min-height: 400px;
+  }
+
+  .fridge-illustration {
+    width: 228px;
+    height: auto;
+  }
+
+  .fridge-click-sheen {
+    top: 7px;
+    left: 7px;
+    width: 214px;
+    height: calc(100% - 16px);
+  }
+
+  .freezer-label {
+    top: 20%;
+  }
+
+  .fridge-section-label {
+    top: 58%;
+  }
+}
