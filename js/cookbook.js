@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const { recipes, storageKeys, readStorage, writeStorage, readSession, writeSession, makeId } =
+  const { storageKeys, recipes, readSession, writeSession, makeId, getSharedState, loadSharedState, updateSharedState } =
     window.PantryApp;
   const toc = document.querySelector("#recipe-toc");
   const title = document.querySelector("#recipe-title");
@@ -7,12 +7,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const notebookLines = document.querySelector("#notebook-lines");
   const addRecipeButton = document.querySelector("#add-recipe-button");
 
-  let storedRecipes = readStorage(storageKeys.recipes, recipes);
+  let storedRecipes = recipes;
   let activeRecipeId = readSession(storageKeys.activeRecipe, storedRecipes[0] ? storedRecipes[0].id : null);
   let editingRecipeId = null;
 
-  function saveRecipes() {
-    writeStorage(storageKeys.recipes, storedRecipes);
+  function syncRecipes() {
+    storedRecipes = getSharedState().recipes;
   }
 
   function buildNotebookLines() {
@@ -45,7 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
       return recipe;
     });
 
-    saveRecipes();
+    updateSharedState(function (state) {
+      state.recipes = storedRecipes;
+      return state;
+    });
   }
 
   function renderRecipe(recipeId) {
@@ -201,7 +204,10 @@ document.addEventListener("DOMContentLoaded", function () {
       return recipe;
     });
 
-    saveRecipes();
+    updateSharedState(function (state) {
+      state.recipes = storedRecipes;
+      return state;
+    });
     renderToc();
 
     if (activeRecipeId === recipeId) {
@@ -282,7 +288,10 @@ document.addEventListener("DOMContentLoaded", function () {
         storedRecipes = storedRecipes.filter(function (entryItem) {
           return entryItem.id !== recipe.id;
         });
-        saveRecipes();
+        updateSharedState(function (state) {
+          state.recipes = storedRecipes;
+          return state;
+        });
 
         if (!storedRecipes.length) {
           activeRecipeId = null;
@@ -310,7 +319,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     storedRecipes = storedRecipes.concat(newRecipe);
     activeRecipeId = newRecipe.id;
-    saveRecipes();
+    updateSharedState(function (state) {
+      state.recipes = storedRecipes;
+      return state;
+    });
     renderToc();
     renderRecipe(activeRecipeId);
   });
@@ -323,9 +335,23 @@ document.addEventListener("DOMContentLoaded", function () {
     openBodyEditor(activeRecipeId, event.clientX, event.clientY);
   });
 
-  buildNotebookLines();
-  renderToc();
-  renderRecipe(activeRecipeId);
+  async function initializePage() {
+    try {
+      await loadSharedState();
+    } catch (error) {
+      console.error(error);
+    }
 
+    syncRecipes();
+    if (!activeRecipeId && storedRecipes[0]) {
+      activeRecipeId = storedRecipes[0].id;
+    }
+
+    buildNotebookLines();
+    renderToc();
+    renderRecipe(activeRecipeId);
+  }
+
+  initializePage();
   window.addEventListener("resize", buildNotebookLines);
 });

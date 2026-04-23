@@ -1,8 +1,5 @@
 (function () {
   const storageKeys = {
-    shopping: "pantry-shopping-list",
-    pantry: "pantry-fridge-items",
-    recipes: "pantry-recipes",
     activeRecipe: "pantry-active-recipe",
   };
 
@@ -58,17 +55,78 @@
     },
   ];
 
-  function readStorage(key, fallback) {
-    try {
-      const value = window.localStorage.getItem(key);
-      return value ? JSON.parse(value) : fallback;
-    } catch (error) {
-      return fallback;
-    }
+  function cloneState() {
+    return {
+      shopping: JSON.parse(JSON.stringify(defaultShopping)),
+      pantry: JSON.parse(JSON.stringify(defaultPantry)),
+      recipes: JSON.parse(JSON.stringify(recipes)),
+    };
   }
 
-  function writeStorage(key, value) {
-    window.localStorage.setItem(key, JSON.stringify(value));
+  const sharedStore = {
+    state: cloneState(),
+    initialized: false,
+    saveTimer: null,
+    pendingSave: Promise.resolve(),
+  };
+
+  function getState() {
+    return JSON.parse(JSON.stringify(sharedStore.state));
+  }
+
+  async function loadSharedState() {
+    const response = await window.fetch("/api/shared-state", {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to load shared state");
+    }
+
+    const payload = await response.json();
+    sharedStore.state = payload.state || cloneState();
+    sharedStore.initialized = true;
+    return getState();
+  }
+
+  async function saveSharedState() {
+    const snapshot = getState();
+    const response = await window.fetch("/api/shared-state", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ state: snapshot }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to save shared state");
+    }
+
+    const payload = await response.json();
+    sharedStore.state = payload.state || snapshot;
+    return getState();
+  }
+
+  function scheduleSharedSave() {
+    window.clearTimeout(sharedStore.saveTimer);
+    sharedStore.saveTimer = window.setTimeout(function () {
+      sharedStore.pendingSave = saveSharedState().catch(function (error) {
+        console.error(error);
+      });
+    }, 250);
+    return sharedStore.pendingSave;
+  }
+
+  function updateSharedState(updater) {
+    const nextState = updater(getState());
+    if (nextState) {
+      sharedStore.state = nextState;
+    }
+
+    return scheduleSharedSave();
   }
 
   function readSession(key, fallback) {
@@ -93,10 +151,12 @@
     defaultShopping,
     defaultPantry,
     recipes,
-    readStorage,
-    writeStorage,
     readSession,
     writeSession,
     makeId,
+    getSharedState: getState,
+    loadSharedState,
+    saveSharedState,
+    updateSharedState,
   };
 })();

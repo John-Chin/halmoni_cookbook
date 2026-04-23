@@ -1,12 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const {
-    storageKeys,
-    defaultShopping,
-    defaultPantry,
-    readStorage,
-    writeStorage,
-    makeId,
-  } = window.PantryApp;
+  const { makeId, getSharedState, loadSharedState, updateSharedState } = window.PantryApp;
 
   const shoppingForm = document.querySelector("#shopping-form");
   const shoppingInput = document.querySelector("#shopping-input");
@@ -18,15 +11,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const freezerList = document.querySelector("#freezer-items");
   const pantryForms = document.querySelectorAll(".pantry-add-form");
 
-  let shoppingItems = readStorage(storageKeys.shopping, defaultShopping);
-  let pantryItems = readStorage(storageKeys.pantry, defaultPantry);
+  let shoppingItems = [];
+  let pantryItems = { fridge: [], freezer: [] };
 
-  function saveShopping() {
-    writeStorage(storageKeys.shopping, shoppingItems);
-  }
-
-  function savePantry() {
-    writeStorage(storageKeys.pantry, pantryItems);
+  function syncLocalState() {
+    const state = getSharedState();
+    shoppingItems = state.shopping;
+    pantryItems = state.pantry;
   }
 
   function renderShopping() {
@@ -43,7 +34,10 @@ document.addEventListener("DOMContentLoaded", function () {
       checkbox.setAttribute("aria-label", "Mark " + item.text + " as complete");
       checkbox.addEventListener("change", function () {
         item.checked = checkbox.checked;
-        saveShopping();
+        updateSharedState(function (state) {
+          state.shopping = shoppingItems;
+          return state;
+        });
         renderShopping();
       });
 
@@ -54,7 +48,10 @@ document.addEventListener("DOMContentLoaded", function () {
       input.setAttribute("aria-label", "Shopping item");
       input.addEventListener("input", function () {
         item.text = input.value;
-        saveShopping();
+        updateSharedState(function (state) {
+          state.shopping = shoppingItems;
+          return state;
+        });
       });
 
       const removeButton = document.createElement("button");
@@ -66,7 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
         shoppingItems = shoppingItems.filter(function (entry) {
           return entry.id !== item.id;
         });
-        saveShopping();
+        updateSharedState(function (state) {
+          state.shopping = shoppingItems;
+          return state;
+        });
         renderShopping();
       });
 
@@ -92,7 +92,10 @@ document.addEventListener("DOMContentLoaded", function () {
       input.setAttribute("aria-label", sectionName + " item");
       input.addEventListener("input", function () {
         item.text = input.value;
-        savePantry();
+        updateSharedState(function (state) {
+          state.pantry = pantryItems;
+          return state;
+        });
       });
 
       const removeButton = document.createElement("button");
@@ -104,7 +107,10 @@ document.addEventListener("DOMContentLoaded", function () {
         pantryItems[sectionName] = pantryItems[sectionName].filter(function (entry) {
           return entry.id !== item.id;
         });
-        savePantry();
+        updateSharedState(function (state) {
+          state.pantry = pantryItems;
+          return state;
+        });
         renderPantry();
       });
 
@@ -130,7 +136,10 @@ document.addEventListener("DOMContentLoaded", function () {
       text: value,
       checked: false,
     });
-    saveShopping();
+    updateSharedState(function (state) {
+      state.shopping = shoppingItems;
+      return state;
+    });
     renderShopping();
     shoppingForm.reset();
     shoppingInput.focus();
@@ -151,7 +160,10 @@ document.addEventListener("DOMContentLoaded", function () {
         id: makeId(sectionName),
         text: value,
       });
-      savePantry();
+      updateSharedState(function (state) {
+        state.pantry = pantryItems;
+        return state;
+      });
       renderPantry();
       form.reset();
       input.focus();
@@ -183,6 +195,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  renderShopping();
-  renderPantry();
+  async function initializePage() {
+    try {
+      await loadSharedState();
+    } catch (error) {
+      console.error(error);
+    }
+
+    syncLocalState();
+    renderShopping();
+    renderPantry();
+  }
+
+  initializePage();
 });

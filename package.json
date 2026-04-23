@@ -1,0 +1,13 @@
+{
+  "name": "halmoni_cookbook",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check js/global.js && node --check js/home.js && node --check js/cookbook.js && node --check netlify/functions/shared-state.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^9.1.0",
+    "@netlify/functions": "^2.8.2"
+  }
+}
