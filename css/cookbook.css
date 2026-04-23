@@ -180,6 +180,24 @@ body.cookbook-page {
   color: var(--orange-dark);
   font-size: 1.8rem;
   line-height: 28px;
+  cursor: text;
+}
+
+.recipe-title-editor {
+  width: 100%;
+  padding: 0 0 8px;
+  border: 0;
+  border-bottom: 2px dashed var(--teal);
+  background: transparent;
+  color: var(--orange-dark);
+  font-family: "Walter Turncoat", cursive;
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.recipe-title-editor:focus {
+  outline: none;
 }
 
 .recipe-body {

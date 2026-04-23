@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const { storageKeys, recipes, readSession, writeSession, makeId, getSharedState, loadSharedState, updateSharedState } =
     window.PantryApp;
   const toc = document.querySelector("#recipe-toc");
-  const title = document.querySelector("#recipe-title");
   const body = document.querySelector("#recipe-body");
   const notebookLines = document.querySelector("#notebook-lines");
   const addRecipeButton = document.querySelector("#add-recipe-button");
@@ -10,6 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
   let storedRecipes = recipes;
   let activeRecipeId = readSession(storageKeys.activeRecipe, storedRecipes[0] ? storedRecipes[0].id : null);
   let editingRecipeId = null;
+  let editingTitleId = null;
+
+  function getTitleElement() {
+    return document.querySelector("#recipe-title");
+  }
 
   function syncRecipes() {
     storedRecipes = getSharedState().recipes;
@@ -30,10 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function playRefreshAnimation() {
-    title.parentElement.classList.remove("is-refreshing");
+    const titleElement = getTitleElement();
+    titleElement.parentElement.classList.remove("is-refreshing");
     body.classList.remove("is-refreshing");
-    void title.offsetWidth;
-    title.parentElement.classList.add("is-refreshing");
+    void titleElement.offsetWidth;
+    titleElement.parentElement.classList.add("is-refreshing");
     body.classList.add("is-refreshing");
   }
 
@@ -59,9 +64,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!recipe) {
       activeRecipeId = null;
       writeSession(storageKeys.activeRecipe, null);
-      title.textContent = "No recipes yet";
+      getTitleElement().textContent = "No recipes yet";
       body.innerHTML = "";
       editingRecipeId = null;
+      editingTitleId = null;
       const paragraph = document.createElement("p");
       paragraph.className = "empty-recipe-message";
       paragraph.textContent = "Add a recipe from the sidebar to start filling your cookbook.";
@@ -73,9 +79,18 @@ document.addEventListener("DOMContentLoaded", function () {
     activeRecipeId = recipe.id;
     writeSession(storageKeys.activeRecipe, activeRecipeId);
 
-    title.textContent = recipe.title;
+    const titleElement = getTitleElement();
+    if (titleElement.tagName === "INPUT") {
+      const heading = document.createElement("h1");
+      heading.id = "recipe-title";
+      heading.className = "recipe-title";
+      titleElement.replaceWith(heading);
+    }
+
+    getTitleElement().textContent = recipe.title;
     body.innerHTML = "";
     editingRecipeId = null;
+    editingTitleId = null;
 
     recipe.body.split("\n").forEach(function (line) {
       const paragraph = document.createElement("p");
@@ -215,6 +230,47 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function openTitleEditor(recipeId) {
+    const recipe = storedRecipes.find(function (entry) {
+      return entry.id === recipeId;
+    });
+
+    if (!recipe || editingTitleId === recipeId) {
+      return;
+    }
+
+    editingTitleId = recipeId;
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "recipe-title-editor";
+    input.value = recipe.title;
+    input.setAttribute("aria-label", "Edit recipe title");
+
+    function commitTitleEdit() {
+      editingTitleId = null;
+      renameRecipe(recipeId, input.value || recipe.title);
+    }
+
+    input.addEventListener("blur", commitTitleEdit);
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        commitTitleEdit();
+      }
+
+      if (event.key === "Escape") {
+        editingTitleId = null;
+        renderRecipe(recipeId);
+      }
+    });
+
+    getTitleElement().replaceWith(input);
+    input.id = "recipe-title";
+    input.focus();
+    input.select();
+  }
+
   function renderRenameInput(recipe, entry) {
     const existingButton = entry.querySelector(".recipe-link");
     const input = document.createElement("input");
@@ -350,6 +406,12 @@ document.addEventListener("DOMContentLoaded", function () {
     buildNotebookLines();
     renderToc();
     renderRecipe(activeRecipeId);
+
+    document.addEventListener("dblclick", function (event) {
+      if (event.target && event.target.id === "recipe-title" && event.target.tagName !== "INPUT" && activeRecipeId) {
+        openTitleEditor(activeRecipeId);
+      }
+    });
   }
 
   initializePage();
