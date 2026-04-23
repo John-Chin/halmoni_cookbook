@@ -1,6 +1,10 @@
 body.home-page {
   background:
-    radial-gradient(circle at top left, rgba(255, 248, 240, 0.38), transparent 34%),
+    radial-gradient(
+      circle at top left,
+      rgba(255, 248, 240, 0.38),
+      transparent 34%
+    ),
     linear-gradient(135deg, #f98f45 0%, #fdb87e 48%, #f0a860 100%);
 }
 
@@ -76,6 +80,9 @@ body.home-page {
   margin: 0;
   color: rgba(255, 255, 255, 0.84);
   font-size: 1.05rem;
+  font-family: "Orbitron", sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
 }
 
 .hero-title {

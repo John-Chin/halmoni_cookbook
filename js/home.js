@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const { makeId, getSharedState, loadSharedState, updateSharedState } = window.PantryApp;
+  const { makeId, getSharedState, loadSharedState, updateSharedState } =
+    window.PantryApp;
 
   const shoppingForm = document.querySelector("#shopping-form");
   const shoppingInput = document.querySelector("#shopping-input");
   const shoppingList = document.querySelector("#shopping-list");
+  const heroClock = document.querySelector("#hero-clock");
   const fridgeTrigger = document.querySelector("#fridge-trigger");
   const modal = document.querySelector("#fridge-modal");
   const modalClose = document.querySelector("#modal-close");
@@ -104,9 +106,11 @@ document.addEventListener("DOMContentLoaded", function () {
       removeButton.textContent = "×";
       removeButton.setAttribute("aria-label", "Remove " + item.text);
       removeButton.addEventListener("click", function () {
-        pantryItems[sectionName] = pantryItems[sectionName].filter(function (entry) {
-          return entry.id !== item.id;
-        });
+        pantryItems[sectionName] = pantryItems[sectionName].filter(
+          function (entry) {
+            return entry.id !== item.id;
+          },
+        );
         updateSharedState(function (state) {
           state.pantry = pantryItems;
           return state;
@@ -122,6 +126,26 @@ document.addEventListener("DOMContentLoaded", function () {
   function renderPantry() {
     renderPantrySection("fridge", fridgeList);
     renderPantrySection("freezer", freezerList);
+  }
+
+  function formatHeroClock(date) {
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+    }).format(date);
+  }
+
+  function updateHeroClock() {
+    if (!heroClock) {
+      return;
+    }
+
+    heroClock.textContent = formatHeroClock(new Date());
   }
 
   shoppingForm.addEventListener("submit", function (event) {
@@ -205,6 +229,8 @@ document.addEventListener("DOMContentLoaded", function () {
     syncLocalState();
     renderShopping();
     renderPantry();
+    updateHeroClock();
+    window.setInterval(updateHeroClock, 1000);
   }
 
   initializePage();
