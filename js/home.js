@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const removeButton = document.createElement("button");
       removeButton.type = "button";
       removeButton.className = "mini-button";
-      removeButton.textContent = "Remove";
+      removeButton.textContent = "×";
       removeButton.setAttribute("aria-label", "Remove " + item.text);
       removeButton.addEventListener("click", function () {
         pantryItems[sectionName] = pantryItems[sectionName].filter(function (entry) {
